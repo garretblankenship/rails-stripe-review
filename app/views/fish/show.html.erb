@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @fish.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @fish.description %>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @fish.price %>
+  <% unless @fish.order %>
+    <button data-stripe="buy">Buy Now!</button>
+  <% end %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @fish.user.email %>
+</p>
+
+<%= link_to 'Edit', edit_fish_path(@fish) %> |
+<%= link_to 'Back', fish_index_path %>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    document.querySelector("[data-stripe='buy']").addEventListener("click", () => {
+        const stripe = Stripe("<%= Rails.application.credentials.dig(:stripe, :public) %>");
+        
+        stripe.redirectToCheckout({
+          sessionId: "<%= @session_id %>"
+        });
+    });
+</script>
